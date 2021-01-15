@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <input id="urlVideo" type="text" />
+    <button onclick="getLink()">Find</button>
+
+    <video id="sourceVideo" width="670" height="377" autoplay="true" controls="controls">
+        <source src="" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+    </video>
+    <img id="sourceImage" width="200" height="200" src="" />
+
+    <script>
+        const viewSource = document.querySelector('#urlVideo');
+        const videoSrc = document.querySelector('#sourceVideo');
+        const imgSrc = document.querySelector('#sourceImage');
+
+        function getLink() {
+            magicHereWithSource('playable_url_quality_hd', videoSrc);
+            magicHereWithSource('thumbnailImage', imgSrc)
+            //magicHereWithSource('preferred_thumbnail', imgSrc);
+
+        }
+        // view-source:https://www.facebook.com/watch/?v=3777269989018733
+
+        // view-source:https://www.facebook.com/112526667239774/videos/763144821222779/ preferred_thumbnail
+        //videoOrThumb playable_url_quality_hd/thumbnailImage
+        // view-source:https://www.facebook.com/110164864136219/videos/1136619216773373
+        // ko login videoID - thumbnailUrl
+        function magicHereWithSource(videoOrThumb, videoOrImg) {
+            let urlText = viewSource.value;
+
+            let getIndex = urlText.indexOf(videoOrThumb);
+            let getString = urlText.slice(getIndex + (videoOrThumb == 'playable_url_quality_hd' ? 26 : 24), getIndex +
+                400)
+            console.log("getString:", getString)
+            if (getString.includes(`scontent`)) {
+                let splitString = getString.split(',');
+                console.log("splitString: ", splitString)
+                let linkVideo = splitString[0].split('"')[0];
+                let decode = linkVideo.split('\\');
+                console.log("decode: ", decode)
+                let finalLink = '';
+                decode.forEach(element => {
+                    finalLink += element
+                });
+                console.log("finalLink: ", finalLink, finalLink.length)
+                videoOrImg.src = finalLink;
+            } else {
+                console.log('ko co')
+                let getIndex = urlText.indexOf(videoOrThumb = 'videoOrThumb' ? 'preferred_thumbnail' : '');
+                let getString = urlText.slice(getIndex + (videoOrThumb == 'playable_url_quality_hd' ? 26 : 38),
+                    getIndex +
+                    400)
+                console.log("getString:", getString)
+                let splitString = getString.split(',');
+                console.log("splitString: ", splitString)
+                let linkVideo = splitString[0].split('"')[0];
+                let decode = linkVideo.split('\\');
+                console.log("decode: ", decode)
+                let finalLink = '';
+                decode.forEach(element => {
+                    finalLink += element
+                });
+                console.log("finalLink: ", finalLink, finalLink.length)
+                videoOrImg.src = finalLink;
+            }
+
+        }
+    </script>
+</body>
+
+</html>
